@@ -479,7 +479,7 @@
             (fail s env))))))
 
 
-(define-syntax exist
+(define-syntax fresh
   (syntax-rules ()
     ((_ (x ...) g0 g ...)
      (lambdag@ (s env)
@@ -662,7 +662,7 @@
     ((_ (x ...) g g* ...)
      (lambdag@ (s env)
        (let ((x (walk* x s)) ...)
-         ((exist () g g* ...) s env))))))
+         ((fresh () g g* ...) s env))))))
 
 
 
@@ -713,13 +713,13 @@
 
 (define caro
   (lambda (p a)
-    (exist (d)
+    (fresh (d)
       (== (cons a d) p))))
 
 
 (define cdro
   (lambda (p d)
-    (exist (a)
+    (fresh (a)
       (== (cons a d) p))))
 
 
@@ -740,7 +740,7 @@
 
 (define pairo
   (lambda (p)
-    (exist (a d)
+    (fresh (a d)
       (conso a d p))))
 
 
@@ -761,18 +761,18 @@
     (conde
       ((nullo l) (== '() out))
       ((caro l x) (cdro l out))
-      ((exist (res)
-         (exist (d)
+      ((fresh (res)
+         (fresh (d)
            (cdro l d)
            (rembero1 x d res))
-         (exist (a)
+         (fresh (a)
            (caro l a)
            (conso a res out)))))))
 
 
 ;; example
 (run* (out)
- (exist (y)
+ (fresh (y)
    (rembero1 y `(a b ,y d peas e) out)))
 
 
@@ -797,18 +797,18 @@
     (condc
       ((nullo l) (== '() out))
       ((caro l x) (cdro l out))
-      ((exist (res)
-         (exist (d)
+      ((fresh (res)
+         (fresh (d)
            (cdro l d)
            (rembero x d res))
-         (exist (a)
+         (fresh (a)
            (caro l a)
            (conso a res out)))))))
 
 
 ;; example
 (run* (out)
- (exist (y)
+ (fresh (y)
    (rembero y `(a b ,y d peas e) out)))
 
 
@@ -834,7 +834,7 @@
 ;-------------------------------------------------------------
 
 (run 5 (out)
- (exist (y l r)
+ (fresh (y l r)
   (== out (list y l r))
   (rembero y l r)))
 
@@ -856,7 +856,7 @@
 ;; (_.1)) is not an answer is to instantiate both variables to 1:
 
 (run 5 (out)
- (exist (y l r)
+ (fresh (y l r)
   (== out '(1 (1) (1)))
   (== out (list y l r))
   (rembero y l r)))
@@ -868,7 +868,7 @@
 ;; may help:
 
 (run* (out)
-  (exist (x y)
+  (fresh (x y)
     (== out (list x y))
     (condc
       ((caro (list x) y))
@@ -897,7 +897,7 @@
 (define (num x)
  (conde
    ((== x '()))
-   ((exist (y)
+   ((fresh (y)
     (== x (cons 1 y))
     (num y)))))
 
@@ -908,7 +908,7 @@
 (define (gt x y)
  (conde
    ((== y '()) (pairo x))
-   ((exist (x1 y1)
+   ((fresh (x1 y1)
      (== x (cons 1 x1))
      (== y (cons 1 y1))
      (gt x1 y1)))))
@@ -917,7 +917,7 @@
 
 
 ;; (run 1 (out)
-;;  (exist (x y)
+;;  (fresh (x y)
 ;;   (condc
 ;;     ((gt x y) fail)
 ;;     ((gt x (cons 1 y))
@@ -927,7 +927,7 @@
 
 ;; rewritten this way
 ;; (run 1 (out)
-;;  (exist (x y)
+;;  (fresh (x y)
 ;;    (== out (list x y))
 ;;    (num x) (num y)
 ;;    (condc
@@ -960,4 +960,6 @@
 
        ;; Cheers,
        ;; Oleg
+
+
 

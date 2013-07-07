@@ -59,7 +59,7 @@ explained by the following "unreasonable" example from *The Reasoned Schemer*
 
 
     (run* (out)
-     (exist (y)
+     (fresh (y)
        (rembero1 y `(a b ,y d peas e) out)))
 
     ;; =>
@@ -86,17 +86,17 @@ If we use the 'condc' operator to redefine remebero, we will have the following
         (condc
           ((nullo l) (== '() out))
           ((caro l x) (cdro l out))
-          ((exist (res)
-             (exist (d)
+          ((fresh (res)
+             (fresh (d)
                (cdro l d)
                (rembero x d res))
-             (exist (a)
+             (fresh (a)
                (caro l a)
                (conso a res out)))))))
 
 
     (run* (out)
-     (exist (y)
+     (fresh (y)
        (rembero y `(a b ,y d peas e) out)))
 
 
