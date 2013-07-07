@@ -445,7 +445,7 @@
             (if (snull? cc)
                 snull
                 (sunit (Pkg s1 (filter (lambda (c) 
-                                         (not (tautology? c (Pkg-subst s))))
+                                         (not (subsumed? c (Pkg-subst s))))
                                        (Pkg-constraints s))))))])))))
 
 
@@ -540,7 +540,7 @@
            (Pkg-constraints s))
     (map (reify-constraint s)
          (filter (lambda (c) 
-                   (not (tautology? c (Pkg-subst s))))
+                   (not (subsumed? c (Pkg-subst s))))
                  (Pkg-constraints s)))))
 
 
@@ -562,9 +562,9 @@
                        ss)))))))
 
 
-(define tautology?
+(define subsumed?
   (lambda (c s)
-    (debug 'tautology?
+    (debug 'subsumed?
            "constraint: ~a\nvars: ~a\nsubst:~a\n"
            (Constraint-text c)
            (Constraint-vars c)
@@ -960,6 +960,3 @@
 
        ;; Cheers,
        ;; Oleg
-
-
-
